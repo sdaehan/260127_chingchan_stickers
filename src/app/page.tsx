@@ -7,6 +7,7 @@ import { useFamily } from "@/contexts/FamilyContext";
 import { Onboarding } from "@/components/Onboarding";
 import { EditableTitle } from "@/components/EditableTitle";
 import { HomeCards } from "@/components/HomeCards";
+import { HomeEmptyState } from "@/components/HomeEmptyState";
 
 export default function Home() {
   const { isLoading, isOnboarded, settings, children, updateSettings } = useFamily();
@@ -39,8 +40,10 @@ export default function Home() {
           />
         </div>
         <Link
-          href="/settings"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-amber-700 transition hover:bg-amber-100"
+          href={children.length === 0 ? "/settings?add=1" : "/settings"}
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-amber-700 transition hover:bg-amber-100 ${
+            children.length === 0 ? "ring-2 ring-amber-400/60 ring-offset-2 ring-offset-transparent" : ""
+          }`}
           aria-label="설정"
         >
           <Settings size={22} />
@@ -48,7 +51,11 @@ export default function Home() {
       </header>
 
       <main className="flex flex-1 flex-col items-center px-4 py-8">
-        <HomeCards children={children} />
+        {children.length === 0 ? (
+          <HomeEmptyState />
+        ) : (
+          <HomeCards children={children} />
+        )}
       </main>
     </div>
   );

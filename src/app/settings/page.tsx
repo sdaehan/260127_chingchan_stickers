@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeft, Copy, Plus, Pencil, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useFamily } from "@/contexts/FamilyContext";
@@ -15,6 +15,7 @@ const TARGET_OPTIONS = [10, 20, 30, 40, 50];
 
 export default function SettingsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const {
     isLoading,
     isOnboarded,
@@ -29,10 +30,22 @@ export default function SettingsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editChild, setEditChild] = useState<Child | null>(null);
   const [copyOk, setCopyOk] = useState(false);
+  const hasOpenedAddRef = useRef(false);
 
   useEffect(() => {
     if (!isLoading && !isOnboarded) router.replace("/");
   }, [isLoading, isOnboarded, router]);
+
+  // 홈 빈 상태에서 "자녀 등록하고 칭찬 시작하기" → /settings?add=1 진입 시 모달 자동 오픈
+  useEffect(() => {
+    if (isLoading || !isOnboarded || hasOpenedAddRef.current) return;
+    if (searchParams.get("add") === "1") {
+      hasOpenedAddRef.current = true;
+      setEditChild(null);
+      setModalOpen(true);
+      router.replace("/settings");
+    }
+  }, [isLoading, isOnboarded, searchParams, router]);
 
   const handleAdd = () => {
     setEditChild(null);

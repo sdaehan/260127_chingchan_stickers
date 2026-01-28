@@ -77,7 +77,7 @@ export async function fetchChildren(familyId: string): Promise<Child[]> {
 }
 
 export async function fetchChildMissions(childId: string): Promise<ChildMission[]> {
-  const { data } = await supabase.from("child_missions").select("*").eq("child_id", childId).order("slot_index");
+  const { data } = await supabase.from("missions").select("*").eq("child_id", childId).order("slot_index");
   return data ?? [];
 }
 
@@ -105,7 +105,7 @@ export async function addChild(
     .single();
   if (e1) throw e1;
   const [m1, m2, m3] = getRecommendedMissions(child.age);
-  await supabase.from("child_missions").insert([
+  await supabase.from("missions").insert([
     { child_id: c!.id, mission_text: m1, slot_index: 0, is_custom: false },
     { child_id: c!.id, mission_text: m2, slot_index: 1, is_custom: false },
     { child_id: c!.id, mission_text: m3, slot_index: 2, is_custom: false },
@@ -132,7 +132,7 @@ export async function refreshChildMissions(childId: string, age: number) {
   for (let i = 0; i < 3; i++) {
     const text = [m1, m2, m3][i]!;
     await supabase
-      .from("child_missions")
+      .from("missions")
       .update({ mission_text: text, updated_at: new Date().toISOString() })
       .eq("child_id", childId)
       .eq("slot_index", i);
@@ -141,7 +141,7 @@ export async function refreshChildMissions(childId: string, age: number) {
 
 export async function updateChildMission(childId: string, slotIndex: number, missionText: string) {
   const { error } = await supabase
-    .from("child_missions")
+    .from("missions")
     .update({ mission_text: missionText, updated_at: new Date().toISOString() })
     .eq("child_id", childId)
     .eq("slot_index", slotIndex);
@@ -149,7 +149,7 @@ export async function updateChildMission(childId: string, slotIndex: number, mis
 }
 
 export async function addStickerEvent(childId: string, missionText: string) {
-  const { error } = await supabase.from("sticker_events").insert({ child_id: childId, mission_text: missionText });
+  const { error } = await supabase.from("sticker_history").insert({ child_id: childId, mission_text: missionText });
   if (error) throw error;
 }
 
@@ -170,7 +170,7 @@ export async function fetchLastResetAt(childId: string): Promise<string | null> 
 }
 
 export async function fetchStickerEventsSince(childId: string, since: string | null): Promise<{ mission_text: string; created_at: string }[]> {
-  let q = supabase.from("sticker_events").select("mission_text, created_at").eq("child_id", childId).order("created_at", { ascending: false }).limit(50);
+  let q = supabase.from("sticker_history").select("mission_text, created_at").eq("child_id", childId).order("created_at", { ascending: false }).limit(50);
   if (since) q = q.gt("created_at", since);
   const { data } = await q;
   return data ?? [];
