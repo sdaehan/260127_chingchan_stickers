@@ -1,6 +1,6 @@
-export const dynamic = 'force-dynamic'; // 이 줄을 추가하세요!
+"use client"; // 무조건 1번 줄에 있어야 합니다!
 
-"use client";
+export const dynamic = 'force-dynamic'; 
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
