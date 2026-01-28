@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'; // 이 줄을 추가하세요!
+
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
