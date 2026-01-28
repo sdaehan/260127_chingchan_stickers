@@ -46,7 +46,7 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
   const [childrenMissions, setChildrenMissionsState] = useState<Record<string, ChildMission[]>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isOnboarded, setIsOnboarded] = useState(false);
-  const subRef = useRef<{ unsubscribe: () => void } | null>(null);
+  const subRef = useRef<any>(null);
 
   const refetch = useCallback(async () => {
     if (!familyId) return;
