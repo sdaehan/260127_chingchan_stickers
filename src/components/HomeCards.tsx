@@ -2,17 +2,30 @@
 
 import { motion } from "framer-motion";
 import { KidCard } from "./KidCard";
+import type { Child } from "@/lib/types";
+import { PROFILE_ICONS } from "@/lib/types";
 
-export function HomeCards() {
+type Props = { children: Child[] };
+
+export function HomeCards({ children }: Props) {
+  const iconMap = Object.fromEntries(PROFILE_ICONS.map((p) => [p.id, p.emoji]));
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="flex flex-col gap-6 sm:gap-8"
+      className="flex w-full max-w-md flex-col gap-6 sm:gap-8"
     >
-      <KidCard name="준우" icon="🦕" href="/junwoo" index={0} />
-      <KidCard name="지우" icon="🤖" href="/jiwoo" index={1} />
+      {children.map((c, i) => (
+        <KidCard
+          key={c.id}
+          name={c.name}
+          icon={iconMap[c.icon] ?? "🌟"}
+          href={`/child/${c.id}`}
+          index={i}
+        />
+      ))}
     </motion.div>
   );
 }

@@ -23,7 +23,7 @@ type Props = {
 };
 
 export function StickerSlot({ index, isFilled, onTap }: Props) {
-  const theme = STICKER_THEMES[index];
+  const theme = STICKER_THEMES[index % STICKER_THEMES.length]!;
 
   return (
     <motion.button
