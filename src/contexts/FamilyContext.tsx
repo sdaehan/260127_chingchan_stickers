@@ -112,8 +112,16 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
         () => refetch()
       )
       .subscribe();
-    subRef.current = () => supabase.removeChannel(channel);
-    return () => subRef.current?.unsubscribe();
+
+// subRef.current에 채널 객체 자체를 담습니다.
+subRef.current = channel;
+
+// 클린업 함수에서 채널을 제거합니다.
+return () => {
+  if (subRef.current) {
+    supabase.removeChannel(subRef.current);
+  }
+};
   }, [familyId, refetch]);
 
   const createFamily = useCallback(async () => {
