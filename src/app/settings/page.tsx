@@ -15,7 +15,7 @@ function SettingsContent() {
   // 자녀 추가 모달 상태 (URL에 add=1이 있으면 자동으로 켭니다)
   const [isAdding, setIsAdding] = useState(searchParams.get("add") === "1");
   const [newName, setNewName] = useState("");
-  const [newGender, setNewGender] = useState<"boy" | "girl">("boy");
+  const [newGender, setNewGender] = useState<Gender>("boy" as Gender);
 
   // 1. 자녀 추가 함수
   const handleAddChild = async () => {
@@ -23,8 +23,8 @@ function SettingsContent() {
     
     const success = await addChild({
       name: newName,
-      gender: newGender,
-      profile_icon_id: newGender === "boy" ? "dino" : "fairy" // 기본 아이콘 설정
+      gender: newGender as Gender, // 'as Gender'를 추가하여 강제로 맞춰줍니다.
+      profile_icon_id: newGender === "boy" ? "dino" : "fairy"
     });
 
     if (success) {
