@@ -7,6 +7,9 @@ import { ChevronLeft, Plus, Pencil, Trash2, Save, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFamily } from "@/contexts/FamilyContext";
 
+// 👇 이 줄을 새로 추가해 주세요!
+import type { Gender } from "@/lib/types";
+
 function SettingsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
