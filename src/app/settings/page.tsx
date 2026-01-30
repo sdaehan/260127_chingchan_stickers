@@ -26,14 +26,15 @@ function SettingsContent() {
     
     const success = await addChild({
       name: newName,
-      gender: newGender as Gender, // 'as Gender'를 추가하여 강제로 맞춰줍니다.
-      profile_icon_id: newGender === "boy" ? "dino" : "fairy"
+      age: 0, // 👈 age 항목이 필수이므로 기본값(0)을 추가합니다.
+      gender: newGender as Gender,
+      icon: (newGender === "boy" ? "dino" : "fairy") as any // 👈 profile_icon_id 대신 icon으로 이름을 바꿉니다.
     });
 
     if (success) {
       setNewName("");
       setIsAdding(false);
-      router.replace("/settings"); // URL에서 ?add=1 제거
+      router.replace("/settings");
     }
   };
 
